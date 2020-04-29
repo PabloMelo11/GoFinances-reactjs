@@ -40,6 +40,8 @@ const Import: React.FC = () => {
     } catch (err) {
       console.log(err.response.error);
     }
+
+    data.delete('file');
   }
 
   function submitFile(files: File[]): void {

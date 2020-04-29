@@ -11,7 +11,13 @@ import Header from '../../components/Header';
 import formatValue from '../../utils/formatValue';
 import formatDate from '../../utils/formatDate';
 
-import { Container, CardContainer, Card, TableContainer } from './styles';
+import {
+  Container,
+  CardContainer,
+  Card,
+  TableContainer,
+  NoTransactions,
+} from './styles';
 
 interface Transaction {
   id: string;
@@ -111,17 +117,21 @@ const Dashboard: React.FC = () => {
             </thead>
 
             <tbody>
-              {transactions.map(transaction => (
-                <tr key={transaction.id}>
-                  <td className="title">{transaction.title}</td>
-                  <td className={transaction.type}>
-                    {transaction.type === 'outcome' ? '- ' : ''}
-                    {formatValue(transaction.value)}
-                  </td>
-                  <td>{transaction.category.title}</td>
-                  <td>{transaction.formattedDate}</td>
-                </tr>
-              ))}
+              {transactions.length > 0 ? (
+                transactions.map(transaction => (
+                  <tr key={transaction.id}>
+                    <td className="title">{transaction.title}</td>
+                    <td className={transaction.type}>
+                      {transaction.type === 'outcome' ? '- ' : ''}
+                      {formatValue(transaction.value)}
+                    </td>
+                    <td>{transaction.category.title}</td>
+                    <td>{transaction.formattedDate}</td>
+                  </tr>
+                ))
+              ) : (
+                <NoTransactions>Nao ha Transações</NoTransactions>
+              )}
             </tbody>
           </table>
         </TableContainer>

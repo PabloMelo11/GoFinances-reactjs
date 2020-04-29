@@ -93,3 +93,7 @@ export const TableContainer = styled.section`
     }
   }
 `;
+
+export const NoTransactions = styled.span`
+  font-size: 24px;
+`;

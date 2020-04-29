@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -29,31 +30,39 @@ const Import: React.FC = () => {
 
   const history = useHistory();
 
-  async function handleUpload(uploadedFile: FileProps): Promise<void> {
+  async function handleUpload(): Promise<void> {
     const data = new FormData();
 
-    data.append('file', uploadedFile.file);
+    async function processArray(): Promise<void> {
+      for (const uploadedFile of uploadedFiles) {
+        data.append('file', uploadedFile.file);
 
-    try {
-      await api.post('/transactions/import', data);
-      return;
-    } catch (err) {
-      console.log(err.response.error);
+        try {
+          await api.post('/transactions/import', data);
+          return;
+        } catch (err) {
+          console.log(err.response.error);
+        }
+
+        data.delete('file');
+      }
     }
 
-    data.delete('file');
+    await processArray();
+
+    history.goBack();
   }
 
   function submitFile(files: File[]): void {
-    const submittedFiles = files.map(file => {
-      return {
+    files.forEach(file => {
+      const newFile: FileProps = {
         file,
         name: file.name,
         readableSize: filesize(file.size),
-      } as FileProps;
-    });
+      };
 
-    setUploadedFiles(submittedFiles);
+      setUploadedFiles([...uploadedFiles, newFile]);
+    });
   }
 
   return (
@@ -70,15 +79,7 @@ const Import: React.FC = () => {
               <img src={alert} alt="Alert" />
               Permitido apenas arquivos CSV
             </p>
-            <button
-              onClick={async () => {
-                uploadedFiles.forEach(uploadedFile => {
-                  handleUpload(uploadedFile);
-                });
-                history.goBack();
-              }}
-              type="button"
-            >
+            <button onClick={handleUpload} type="button">
               Envair
             </button>
           </Footer>

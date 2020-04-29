@@ -15,9 +15,20 @@ const Header: React.FC<HeaderProps> = ({ size = 'large' }: HeaderProps) => (
     <header>
       <img src={Logo} alt="GoFinances" />
       <nav>
-        {
-          // Todo
-        }
+        <Link
+          to="/"
+          className={window.location.pathname === '/' ? 'selected' : ''}
+        >
+          Listagem
+        </Link>
+        <Link
+          to="/import"
+          className={
+            window.location.pathname.includes('import') ? 'selected' : ''
+          }
+        >
+          Importar
+        </Link>
       </nav>
     </header>
   </Container>
